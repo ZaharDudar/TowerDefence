@@ -1,5 +1,7 @@
 #include <vector>
 #include <iostream>
+#include "Display.h"
+#include <string.h>
 /* Предполагаю, что в этом классе хранится вся карта по уровням:
     Типа нижний уровень, сама карта:
     ########
@@ -21,7 +23,7 @@
     В можно добавить к позиции просто индект типа (например: 0 - ближнебойная, 1 - дальнобойная)
 
 */
-using std::vector, std::find;
+using std::vector, std::find, std::string;
 
 class Map
 {
@@ -31,6 +33,8 @@ class Map
         vector<vector<int>> map;
         vector<vector<int>> entities;
         vector<vector<int>> towers;
+        vector<string> charOfMapOjects = {".","#"};
+        vector<string> colorsOfMapOjects = {"35", "95"};
     public:
         Map(int, int, vector<vector<int>>&);//Конструктор, передаю размеры поля и само поле формата vector<vector<int>>
         void move(int, int, int, int);//Пока что не реализовал
@@ -39,6 +43,10 @@ class Map
         int addTower(int, int);//Добавляет Башню на поле в заданное место
         int addEntitiy(int, int);//Добавляет Существо на поле в заданное место
         void DedugPrintMap();//Выводит в консоль карту, сама карта - цифрами, башня - #, существо - @. ТОЛЬКО ДЛЯ ДЕБАГА, ВЫВОД В КОНСОЛЬ БУДЕТ ОСУЩЕСТВЛЯТЬСЯ С ПОМОШЬЮ КЛАССА Display
+        int setStyleToElement(int, char, string&); // Меняет или добавляет (в случае, если объекта на карте с таким индексом нет) цвет и символ элемента
+        std::pair<char, string> getStyleOfElement(int); // Возвращает символ и цвет элемента, если его нет, вернёт пару с пустыми строками
+        void loadStyle();
+    friend class Display;
 };
 
 Map::Map(int width, int height, vector<vector<int>>& inpMap)
@@ -112,4 +120,11 @@ void Map::DedugPrintMap()
         std::cout << "\n";
     }
 }
+// int Map::setStyleToElement(int i, char ch, string& color)
+// {
+//     if(i >= colorOfMapObject.begin() || i <= charOfMapOjects.end())
+//     {
+        
+//     }
+// }
 
