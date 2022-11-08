@@ -1,4 +1,4 @@
-#include "..\libs\Map.h"
+#include "../mainHeader.h"
 #include <iostream>
 #include <vector>
 /* Файл с тестом методов класса Map*/
@@ -13,14 +13,17 @@ int main(){
     };
     int w = inpMap.size();
     int h = inpMap[0].size();
-    Map map1(w, h, inpMap);
-    map1.DedugPrintMap();
+    Display disp(4,4,1,1);
+    Map mapSt(w, h, inpMap);
+    mapSt.DedugPrintMap();
 
-    cout << map1.addEntitiy(1,2) << "\n";
-    cout << map1.addTower(3,0) << "\n";
-    cout << map1.addTower(3,1) << "\n";
-    cout << map1.getIndexOfTower(3,1)<<"\n";
-    cout << map1.getIndexOfEntity(3,3)<<"\n";
-    map1.DedugPrintMap();
+    cout << mapSt.addEntitiy(1,2, EntityBase()) << "\n";
+    cout << mapSt.addTower(3,0, TowerBase()) << "\n";
+    cout << mapSt.addTower(3,1, TowerBase()) << "\n";
+    cout << mapSt.getTower(3,1).getType()<<"\n";
+    cout << mapSt.getEntity(3,3).getType()<<"\n";
+    mapSt.DedugPrintMap();
+    disp.draw(mapSt);
+
 
 }
