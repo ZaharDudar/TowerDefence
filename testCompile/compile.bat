@@ -1,0 +1,1 @@
+g++ ..\libs\Display.cpp ..\libs\Map.cpp ..\classes\EntityBase.cpp ..\classes\TowerBase.cpp ..\libs\libsHeader.h ..\classes\Creatures.h ..\tests\mapTest.cpp -o p -ggdb

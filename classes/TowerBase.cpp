@@ -1,6 +1,6 @@
 #include <string.h>
-#include "../mainHeader.h"
 #include <iostream>
+#include ".\Creatures.h"
 // Базовый класс Башни type = 0 - по умолчанию.
 
 

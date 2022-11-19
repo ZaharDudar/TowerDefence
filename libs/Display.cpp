@@ -1,17 +1,17 @@
 #include <iostream>
 #include <sstream>
-#include "../mainHeader.h"
+#include ".\libsHeader.h"
 #include <Windows.h>
 #include <string.h>
 
 
 
 
-Display::Display(int width, int height, int xOffset = 0, int yOffset = 0)
+Display::Display(int xOffset = 0, int yOffset = 0)
 {
-    this->width = width;
-    this->height = height;
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    // system("chcp 850");
+    system("cls");
+    this->hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleCursorInfo(hConsole, &cursor_info);
     cursor_info.bVisible = false;
     SetConsoleCursorInfo(hConsole, &cursor_info);
@@ -21,12 +21,15 @@ Display::Display(int width, int height, int xOffset = 0, int yOffset = 0)
 
 void Display::draw(Map& map)
 {
-    SetConsoleCursorPosition(hConsole, offsetMainMap);
+    std::pair<int, int> size = map.getSize();
+    this->height = get<0>(size);
+    this->width = get<1>(size);
+    SetConsoleCursorPosition(hConsole, COORD {0,0});
     std::ostringstream outStream;
     for(int y = 0; y < height; y++){
         for (int x = 0; x < width; x++)
         {
-            outStream << map.getPixel(x,y)<<" ";
+            outStream << map.getPixel(x,y) << " ";
         }
         outStream << "\n";
     }

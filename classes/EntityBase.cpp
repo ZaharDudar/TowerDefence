@@ -1,6 +1,6 @@
 #include <string.h>
 #include <iostream>
-#include "../mainHeader.h"
+#include ".\Creatures.h"
 // Базовый класс Существа type = 0 - по умолчанию.
 
 int EntityBase::getType(){
