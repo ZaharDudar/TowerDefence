@@ -27,7 +27,7 @@ class Map
         bool moveTow(int, int, int);// Передвинет tower с id на новые x y. (id, x2, y2)
         TowerBase getTower(int, int);//По координате возвращает Башню на полe, если башни на клетке нет, вернёт дефолтный класс башни
         // EntityBase* getEntity(int, int);//По координате возвращает Существо на поле, если существа на клетке нет, вернёт дефолтный класс существа
-        void generate(); // Генерация мобов в начале пути
+        void generate(int); // Генерация мобов в начале пути
         EntityBase* getEntityById(int);
         bool tick(); //возращает bool. False - игра продолжается, True - ты лох.
         int get_tick(); //возращает номер тика.

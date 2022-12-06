@@ -12,8 +12,12 @@ int EntityBase::getIndPos(int tick)
     return tick - create_tick;
 }
 std::string EntityBase::getChar()
-{
-    string selfColor = colors_hp[hp-1];
+{ 
+    int _hp = hp;
+    if (hp > colors_hp.size()){
+        _hp = colors_hp.size();
+    }
+    string selfColor = colors_hp[_hp-1];
     return "\x1B[" + selfColor + "m" + selfChar + "\033[0m";
 }
 

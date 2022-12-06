@@ -9,37 +9,33 @@ using namespace std;
 int main()
 {
 
-    std::vector<int> a(10, 1);
-    std::vector<std::vector<int>> inpMap(10, a);
-
-    std::vector<std::vector<int>> path{
-        {0, 0},
-        {0, 1},
-        {1, 1},
-        {1, 2},
-        {2, 2},
-        {2, 3},
-        {3, 3},
-        {3, 4},
-        {4, 4},
-        {4, 5},
-        {5, 5},
-        {5, 6},
-        {6, 6},
-        {6, 7},
-        {7, 7},
-        {7, 8},
-        {8, 8},
-        {8, 9},
-        {9, 9},
-    };
-
-    
-
-    int TICK_TIME = 1000;
-
+    std::vector<int> a(48, 1);
+    std::vector<std::vector<int>> inpMap(48, a);
     int h = inpMap.size();
     int w = inpMap[0].size();
+    std::vector<std::vector<int>> path;
+    int path_x = 0;
+    int path_y = 0;
+    while (1)
+    {
+        if ((path_x == w - 1) && (path_y == h - 1))
+        {
+            break;
+        };
+
+        path.push_back(vector<int>{path_x, path_y});
+
+        if (path_x > path_y)
+        {
+            path_y++;
+        }
+        else
+        {
+            path_x++;
+        }
+    };
+
+    int TICK_TIME = 100;
 
     for (int i = 0; i < path.size(); i++)
     {
@@ -50,13 +46,27 @@ int main()
     Map mapSt(w, h, inpMap, path);
     // Zombie z('X', "31", 1, mapSt.get_tick(), 1);
     // mapSt.addEntitiy(path[0][0], path[0][1], &z);
-    mapSt.addTower(2, 4, Tower('*', "32", 1, 1, 1));
-    mapSt.addTower(5, 2, Tower('*', "32", 1, 1, 1));
-    mapSt.addTower(6, 8, Tower('*', "32", 1, 1, 1));
+    for (size_t i = 0; i < path.size(); i++)
+    {
+
+        if (rand()%3!=0){
+            continue;
+        }
+
+        if (path[i][0] == path[i][1])
+        {
+            mapSt.addTower(path[i][1]+1, path[i][0], Tower('*', "32", 1, 1, 1));
+        }
+        else
+        {
+            mapSt.addTower(path[i][1]-1, path[i][0], Tower('&', "32", 1, 1, 2));
+        }
+    }
+
     while (true)
     {
 
-        mapSt.generate();
+        mapSt.generate(20);
         bool mind = mapSt.tick();
 
         if (mind)
@@ -66,7 +76,8 @@ int main()
 
         disp.draw(mapSt);
 
-        cout << endl << mapSt.get_tick() << endl;
+        cout << endl
+             << mapSt.get_tick() << endl;
         Sleep(TICK_TIME);
     }
 

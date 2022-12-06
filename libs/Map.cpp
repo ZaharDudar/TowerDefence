@@ -291,17 +291,17 @@ int Map::get_tick()
     return this->n_tick;
 }
 
-void Map::generate()
+void Map::generate(int difficulty) 
 {
     int local_tick = get_tick();
     int easy_zombie_tick_gen = (rand() % 4 + 1);
     int strong_zombie_tick_gen = (rand() % 10 + 1);
     if (local_tick % easy_zombie_tick_gen == 0)
     {
-        addEntitiy(path[0][0], path[0][1], new Zombie('X', 1, local_tick, 1));
+        addEntitiy(path[0][0], path[0][1], new Zombie('X', 1, local_tick, 1*difficulty));
     }
     else if (local_tick % strong_zombie_tick_gen == 0)
     {
-        addEntitiy(path[0][0], path[0][1], new Zombie('Z', 1, local_tick, 4));
+        addEntitiy(path[0][0], path[0][1], new Zombie('Z', 1, local_tick, 4*difficulty));
     };
 }
