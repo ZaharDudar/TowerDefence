@@ -54,6 +54,8 @@ class Display
     public:
         Display(int, int);
         void draw(Map&);
+        void printInfo(vector<string>&);
+        void setVisibleCursor(bool);
 };
 
 

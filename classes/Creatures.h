@@ -8,8 +8,6 @@
 using namespace std;
 
 
-
-
 class EntityBase
 {
     protected:
@@ -20,12 +18,12 @@ class EntityBase
         vector<string> colors_hp{"30","31","32","33","34","35","36","37"};
     public:
         EntityBase(){};
-        int getHp();
-        bool isAlive();
-        bool takeDamage(int);
-        int getType();
-        int getIndPos(int);
-        std::string getChar(); // Возвращает сразу строку со своим символом и правильным циветом
+        virtual int getHp();
+        virtual bool isAlive();
+        virtual bool takeDamage(int);
+        virtual int getType();
+        virtual int getIndPos(int);
+        virtual std::string getChar(); // Возвращает сразу строку со своим символом и правильным циветом
 }; 
 class TowerBase
 {
@@ -37,15 +35,14 @@ class TowerBase
         std::string selfColor = "36";
     public:
         TowerBase(){};
-        int getType();
-        int getDamage ();
-        std::string getChar(); // Возвращает сразу строку со своим символом и правильным циветом
-        vector<vector<int>> getRelativeCoord();
+        virtual int getType();
+        virtual int getDamage ();
+        virtual std::string getChar(); // Возвращает сразу строку со своим символом и правильным циветом
+        virtual vector<vector<int>> getRelativeCoord();
 };
 
 class Zombie: public EntityBase
 {
-
     public:
         Zombie(char selfChar, int type, int create_tick, int hp){
             this->type = 1;
@@ -68,7 +65,7 @@ class Tower: public TowerBase
             this->damage = damage;
         };
 
-        vector<vector<int>> getRelativeCoord();
+        // vector<vector<int>> getRelativeCoord() override;
 };
 
 #endif 

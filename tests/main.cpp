@@ -43,6 +43,7 @@ int main()
     }
 
     Display disp(0, 0);
+    disp.setVisibleCursor(false);
     Map mapSt(w, h, inpMap, path);
     // Zombie z('X', "31", 1, mapSt.get_tick(), 1);
     // mapSt.addEntitiy(path[0][0], path[0][1], &z);
@@ -75,9 +76,13 @@ int main()
         };
 
         disp.draw(mapSt);
+        vector<string> outInfo;
+        outInfo.push_back("Tick = " + to_string(mapSt.get_tick()));
+        outInfo.push_back(string ("Your score is 12"));
+        outInfo.push_back(string ("'_'"));
 
-        cout << endl
-             << mapSt.get_tick() << endl;
+
+        disp.printInfo(outInfo);
         Sleep(TICK_TIME);
     }
 
