@@ -254,6 +254,9 @@ bool Map::tick()
                 EntityBase ent = *getEntityById(ent_id);
                 bool alive = ent.takeDamage(tower.getDamage());
                 // cout << "DEAD" << endl;
+                if(!alive){
+                    score++;
+                }
                 *getEntityById(ent_id) = ent;
 
                 break;

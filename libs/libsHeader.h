@@ -14,6 +14,7 @@ class Map
         int width = 0;
         int height = 0;
         int n_tick = 0;
+        int score = 0;
         vector<vector<int>> path;
         vector<vector<int>> map;
         vector<std::tuple<int, int, EntityBase*>> entities;
@@ -40,6 +41,7 @@ class Map
         std::pair<char, string> getStyleOfElement(int); // Возвращает символ и цвет элемента, если его нет, вернёт пару с пустыми строками
         string getPixel(int, int); //Вернёт строку формата "\x1B[" + selfColor + "m" + selfChar + "\033[0m" для конкретной точки на катре
         void loadStyle(); //Пока не реализованно
+        int get_score(){return score;};
         std::pair<int, int> getSize(); // Вернёт Height, Width
 };
 
