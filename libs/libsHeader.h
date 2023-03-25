@@ -53,6 +53,7 @@ class Display
         HANDLE hConsole;
         CONSOLE_CURSOR_INFO cursor_info;
         COORD offsetMainMap;        
+        HWND hWnd;
     public:
         Display(int, int);
         void draw(Map&);

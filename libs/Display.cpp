@@ -12,6 +12,8 @@ Display::Display(int xOffset = 0, int yOffset = 0)
     // system("chcp 850");
     system("cls");
     this->hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    this->hWnd = GetConsoleWindow();
+    ShowWindow(hWnd, SW_SHOWMAXIMIZED);
     GetConsoleCursorInfo(hConsole, &cursor_info);
     offsetMainMap.X = xOffset;
     offsetMainMap.Y = yOffset;
