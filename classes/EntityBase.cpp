@@ -13,11 +13,9 @@ int EntityBase::getIndPos(int tick)
 }
 std::string EntityBase::getChar()
 { 
-    int _hp = hp;
-    if (hp > colors_hp.size()){
-        _hp = colors_hp.size();
-    }
-    string selfColor = colors_hp[_hp-1];
+   double color_index = (((double)hp) /((double)created_hp)) * ((int)colors_hp.size()-1);
+    
+    string selfColor = colors_hp[(int)color_index];
     return "\x1B[" + selfColor + "m" + selfChar + "\033[0m";
 }
 

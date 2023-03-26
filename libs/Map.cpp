@@ -239,6 +239,8 @@ pair<bool, int> Map::tick()
     for (size_t i = 0; i < towers.size(); i++)
     {
         TowerBase tower = get<2>(towers[i]);
+        int num_targets = tower.get_num_targets();
+        int count_targets = 0;
         int x = get<0>(towers[i]);
         int y = get<1>(towers[i]);
         vector<vector<int>> coords = tower.getRelativeCoord();
@@ -266,7 +268,10 @@ pair<bool, int> Map::tick()
                 }
                 *getEntityById(ent_id) = ent;
 
-                break;
+                count_targets++;
+                if (count_targets == num_targets) {
+                    break;
+                }
             }
         }
     }

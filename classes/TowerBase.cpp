@@ -8,6 +8,10 @@ int TowerBase::getType()
 {
     return this->type;
 }
+int TowerBase::get_num_targets()
+{
+    return this->num_targets;
+}
 std::string TowerBase::getChar()
 {
     return "\x1B[" + selfColor + "m" + selfChar + "\033[0m";

@@ -80,6 +80,8 @@ class Game
 {
 private:
 	vector<string> outInfo;
+	vector<tuple<char, int, int, int, int>> towersInfo;
+	bool alive = true;
 	int selected_tower = 0;
 	int money;
 	int difficulty;
@@ -87,7 +89,7 @@ private:
 	void game_func();
 	void interface_func();
 	void cursor_func();
-	MapandPath create_map();
+	MapandPath create_map(int);
 	Map mapSt;
 	Display disp;
 

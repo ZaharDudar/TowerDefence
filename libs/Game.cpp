@@ -1,3 +1,4 @@
+#include <format>
 #include <iostream>
 #include <sstream>
 #include ".\libsHeader.h"
@@ -8,6 +9,7 @@
 #include <utility>
 #include <vector>
 #include <conio.h>
+#include <tuple>
 
 using namespace std;
 
@@ -15,16 +17,24 @@ void Game::start_game(int difficulty)
 {
 	this->difficulty = difficulty;
 	this->money = 60;
-	this->TICK_TIME = 100;
+	this->TICK_TIME = 1000;
+	this->towersInfo = { {'@', 1, 1, 1, 10}, {'$', 1, 3, 2, 30}, {'¹', 2, 2, 3,  60}, {'%', 2, 5, 2, 120}, {'&', 3, 4, 4, 200}, {'?', 3, 6, 6, 240}};
 	outInfo.push_back("Tick = " + to_string(0));
 	outInfo.push_back("Score = " + to_string(0));
 	outInfo.push_back("Your money = " + to_string(money));
-	outInfo.push_back("First tower: &, range 1, damage 5, cost: 30");
-	outInfo.push_back("Secons tower: $, range 2, damage 3, cost: 10");
 	outInfo.push_back("");
 
+	for (size_t i = 0; i < towersInfo.size(); i++)
+	{
+		tuple<char, int, int, int, int> tower = towersInfo[i];
+		outInfo.push_back(format("{} tower: {}, range {}, damage {}, num targets {}, cost: {}", i+1, std::get<0>(tower), std::get<1>(tower), std::get<2>(tower), std::get<3>(tower), std::get<4>(tower)));
+	}
+	
 
-	MapandPath map = create_map();
+	
+
+
+	MapandPath map = create_map(30);
 	int h = map.map.size();
 	int w = map.map[0].size();
 	Map mapSt1(w, h, map.map, map.path);
@@ -35,12 +45,14 @@ void Game::start_game(int difficulty)
 	thread t1(&Game::game_func, this);
 	thread t2(&Game::interface_func, this);
 	thread t3(&Game::cursor_func, this);
+	t1.join();
 	t2.join();
+	t3.join();
 }
 
 
 void Game::cursor_func() {
-	while (1) {
+	while (alive) {
 		if (GetKeyState('W') & 0x800) {
 			disp.move_cur(0, -1);
 		}
@@ -48,23 +60,23 @@ void Game::cursor_func() {
 			disp.move_cur(-1, 0);
 		}
 		else if (GetKeyState('S') & 0x800) {
-			disp.move_cur(0, +1);
+			disp.move_cur(0, 1);
 		}
 		else if (GetKeyState('D') & 0x800) {
 			disp.move_cur(1, 0);
 		}
 		else if (GetKeyState(0x0D) & 0x800) {
 			pair<int, int> p = disp.get_cur();
-			if (mapSt.check_coord_for_tower(p.first, p.second)) {
-				if (selected_tower == 1 && money>= 30) {
-					mapSt.addTower(p.first, p.second, Tower('&', "32", 1, 1, 5));
-					this->money = money - 30;
-				}
-				else if (selected_tower == 2 && money >= 10) {
-					mapSt.addTower(p.first, p.second, Tower('$', "32", 1, 2, 3));
-					this->money = money - 10;
-				}
+			if (mapSt.check_coord_for_tower(p.first, p.second) && selected_tower != 0 && money >= get<4>(towersInfo[selected_tower - 1])) {
+				
+				mapSt.addTower(p.first, p.second, Tower(get<0>(towersInfo[selected_tower - 1]), "32", selected_tower, get<1>(towersInfo[selected_tower - 1]), get<2>(towersInfo[selected_tower - 1]), get<3>(towersInfo[selected_tower - 1])));
+				this->money = money - get<4>(towersInfo[selected_tower - 1]);
+				
 			}
+		}
+		else if (GetKeyState(0x1B) & 0x800) {
+			alive = false;
+			break;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
@@ -73,31 +85,32 @@ void Game::cursor_func() {
 
 void Game::interface_func() {
 	
-	bool key_down = false;
+
 	string can_buy_str;
-	while (1) {
+	while (alive) {
 		if (selected_tower != 0)
 		{
-			if ((selected_tower == 1 && money >= 30) || (selected_tower == 2 && money >= 10)) {
+			if (money >= get<4>(towersInfo[selected_tower-1])) {
 				can_buy_str = " can buy";
 			}
 			else { can_buy_str = " can not buy"; }
 
-			outInfo[5] = ("selected tower: " + to_string(selected_tower) + can_buy_str);
+			outInfo[3] = ("selected tower: " + to_string(selected_tower) + can_buy_str);
 
 		}
 		else
 		{
-			outInfo[5] = ("");
+			outInfo[3] = ("");
 		}
-		if (GetKeyState('1') & 0x800)
+		for (size_t i = 0; i < towersInfo.size(); i++)
 		{
-			this->selected_tower = 1;
+			if (GetKeyState(to_string(i+1).c_str()[0]) & 0x800)
+			{
+				this->selected_tower = i+1;
+			}
 		}
-		if (GetKeyState('2') & 0x800)
-		{
-			this->selected_tower = 2;
-		}
+		
+		
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		disp.printInfo(outInfo);
 		disp.draw(mapSt);
@@ -107,14 +120,20 @@ void Game::interface_func() {
 
 
 void Game::game_func() {
-	int tick = 0;
-	while (true)
+
+	while (alive)
 	{
 		
 		std::this_thread::sleep_for(std::chrono::milliseconds(TICK_TIME));
 		
-
+		if (TICK_TIME > 100) {
+			TICK_TIME -= difficulty/10;
+		}
 		mapSt.generate(difficulty);
+		if (mapSt.get_tick() % 5 == 0) {
+			difficulty++;
+		}
+		
 
 		pair<bool, int> mind_score = mapSt.tick();
 		bool mind = mind_score.first;
@@ -122,6 +141,7 @@ void Game::game_func() {
 		this->money = money + score * 2;
 		if (mind)
 		{
+			alive = false;
 			break;
 		};
 
@@ -130,19 +150,18 @@ void Game::game_func() {
 		outInfo[0] = ("Tick = " + to_string(mapSt.get_tick()));
 		outInfo[1] = ("Score = " + to_string(mapSt.get_score()));
 		outInfo[2] = ("Your money = " + to_string(money));
-		outInfo[3] = ("First tower: &, range 1, damage 5, cost: 30");
-		outInfo[4] = ("Secons tower: $, range 2, damage 3, cost: 10");
+
 
 		
 
 	}
-
+	
 }
 
 
-MapandPath Game::create_map() {
-	std::vector<int> a(49, 1);
-	std::vector<std::vector<int>> inpMap(49, a);
+MapandPath Game::create_map(int size) {
+	std::vector<int> a(size, 1);
+	std::vector<std::vector<int>> inpMap(size, a);
 	int h = inpMap.size();
 	int w = inpMap[0].size();
 	std::vector<std::vector<int>> path;

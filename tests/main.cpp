@@ -12,14 +12,11 @@ using namespace std;
 
 int main()
 {
-
-    cout << "Select difficulty:\n";
-    int diff;
-    cin >> diff;
+    SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE),CONSOLE_FULLSCREEN_MODE,0);
     
     system("cls");
     Game game;
-    game.start_game(diff);
+    game.start_game(0);
     
    
     cout << "GAME OVER";
