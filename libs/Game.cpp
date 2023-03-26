@@ -16,19 +16,21 @@ using namespace std;
 void Game::start_game(int difficulty)
 {
 	this->difficulty = difficulty;
+	this->hp = 10;
 	this->money = 60;
 	this->TICK_TIME = 1000;
-	this->towersInfo = { {'@', 1, 1, 1, 10}, {'$', 1, 3, 2, 30}, {'¹', 2, 2, 3,  60}, {'%', 2, 5, 2, 120}, {'&', 3, 4, 4, 200}, {'?', 3, 6, 6, 240}};
+	this->towersInfo = { {'@', 1, 1, 1, 10}, {'$', 1, 3, 2, 30}, {'ï¿½', 2, 2, 3,  60}, {'%', 2, 5, 2, 120}, {'&', 3, 4, 4, 200}, {'?', 3, 6, 6, 240}};
 	outInfo.push_back("Tick = " + to_string(0));
 	outInfo.push_back("Score = " + to_string(0));
 	outInfo.push_back("Your money = " + to_string(money));
+	outInfo.push_back("Your hp = " + to_string(hp));
 	outInfo.push_back("");
 
-	for (size_t i = 0; i < towersInfo.size(); i++)
-	{
-		tuple<char, int, int, int, int> tower = towersInfo[i];
-		outInfo.push_back(format("{} tower: {}, range {}, damage {}, num targets {}, cost: {}", i+1, std::get<0>(tower), std::get<1>(tower), std::get<2>(tower), std::get<3>(tower), std::get<4>(tower)));
-	}
+	// for (size_t i = 0; i < towersInfo.size(); i++) DEBUG??
+	// {
+	// 	tuple<char, int, int, int, int> tower = towersInfo[i];
+	// 	outInfo.push_back(format("{} tower: {}, range {}, damage {}, num targets {}, cost: {}", i+1, std::get<0>(tower), std::get<1>(tower), std::get<2>(tower), std::get<3>(tower), std::get<4>(tower)));
+	// }
 	
 
 	
@@ -95,12 +97,12 @@ void Game::interface_func() {
 			}
 			else { can_buy_str = " can not buy"; }
 
-			outInfo[3] = ("selected tower: " + to_string(selected_tower) + can_buy_str);
+			outInfo[4] = ("selected tower: " + to_string(selected_tower) + can_buy_str);
 
 		}
 		else
 		{
-			outInfo[3] = ("");
+			outInfo[4] = ("");
 		}
 		for (size_t i = 0; i < towersInfo.size(); i++)
 		{
@@ -141,7 +143,10 @@ void Game::game_func() {
 		this->money = money + score * 2;
 		if (mind)
 		{
-			alive = false;
+			hp--;
+			if (hp<=0){
+				alive = false;
+			}
 			break;
 		};
 
@@ -150,6 +155,7 @@ void Game::game_func() {
 		outInfo[0] = ("Tick = " + to_string(mapSt.get_tick()));
 		outInfo[1] = ("Score = " + to_string(mapSt.get_score()));
 		outInfo[2] = ("Your money = " + to_string(money));
+		outInfo[3] = ("Your hp = " + to_string(hp));
 
 
 		

@@ -84,6 +84,7 @@ private:
 	bool alive = true;
 	int selected_tower = 0;
 	int money;
+	int hp;
 	int difficulty;
 	int TICK_TIME;
 	void game_func();

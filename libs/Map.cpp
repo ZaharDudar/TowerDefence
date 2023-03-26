@@ -285,6 +285,7 @@ pair<bool, int> Map::tick()
             if (z.getIndPos(n_tick) >= path.size())
             {
                 mind = true;
+                z.takeDamage(10000);
                 break;
             };
 
