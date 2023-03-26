@@ -3,7 +3,8 @@
 #include ".\libsHeader.h"
 #include <Windows.h>
 #include <string.h>
-
+#include <utility>
+#include <functional>
 
 
 
@@ -19,6 +20,25 @@ Display::Display(int xOffset = 0, int yOffset = 0)
     offsetMainMap.Y = yOffset;
 }   
 
+
+void Display::move_cur(int x, int y) {
+    int new_x = x_cur + x;
+    int new_y = y_cur + y;
+
+    if ((new_x >= 0 && new_y >= 0 && new_x < width && new_y <  height)) {
+        x_cur = new_x;
+        y_cur = new_y;
+    }
+}
+
+
+pair<int,int> Display::get_cur() {
+    pair<int, int> a;
+    
+    return std::make_pair(x_cur, y_cur);
+}
+
+
 void Display::draw(Map& map)
 {
     std::pair<int, int> size = map.getSize();
@@ -30,7 +50,13 @@ void Display::draw(Map& map)
     for(int y = 0; y < height; y++){
         for (int x = 0; x < width; x++)
         {
-            outStream << map.getPixel(x,y) << " ";
+            if ((x == x_cur) && (y == y_cur)){
+                outStream << "\033[102m" << map.getPixel(x, y) << "\033[0m" << " ";
+            }
+            else {
+                outStream << map.getPixel(x, y) << " ";
+            }
+            /*outStream << map.getPixel(x, y) << " ";*/
         }
         outStream << "\n";
     }
@@ -70,7 +96,7 @@ void Display::printInfo(vector<string>& info)
     cout << " ";
     for (int i = 0; i < maxLenght+2; i++)
     {
-        cout << "‾";
+        cout << "_";
     }
 
     /*  ⌜‾⌝

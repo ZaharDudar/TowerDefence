@@ -1,2 +1,10 @@
 .vscode/
 mainHeader.h.gch
+/.hypothesis/unicode_data/13.0.0
+/.vs
+/Debug
+/x64/Debug
+*.sln
+/mypr.vcxproj.user
+/mypr.vcxproj.filters
+/mypr.vcxproj

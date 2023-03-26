@@ -24,7 +24,7 @@
     В можно добавить к позиции просто индект типа (например: 0 - ближнебойная, 1 - дальнобойная)
 
 */
-using std::vector, std::find, std::string, std::get;
+using namespace std;
 
 Map::Map(int width, int height, vector<vector<int>> &inpMap, vector<vector<int>> &path)
 {
@@ -233,9 +233,9 @@ bool Map::moveTow(int id, int x2, int y2)
     }
     return false;
 }
-bool Map::tick()
+pair<bool, int> Map::tick()
 {
-
+    int tick_score = 0;
     for (size_t i = 0; i < towers.size(); i++)
     {
         TowerBase tower = get<2>(towers[i]);
@@ -254,8 +254,15 @@ bool Map::tick()
                 EntityBase ent = *getEntityById(ent_id);
                 bool alive = ent.takeDamage(tower.getDamage());
                 // cout << "DEAD" << endl;
-                if(!alive){
-                    score++;
+                if (!alive)
+                {
+                    if (ent.getType() == 1) {
+                        tick_score +=2;
+                    }
+                    if (ent.getType() == 2) {
+                        tick_score +=20;
+                    }
+                    
                 }
                 *getEntityById(ent_id) = ent;
 
@@ -285,8 +292,9 @@ bool Map::tick()
     }
 
     this->n_tick++;
+    this->score = score + tick_score;
 
-    return mind;
+    return pair<bool,int> (mind, tick_score);
 }
 
 int Map::get_tick()
@@ -294,17 +302,27 @@ int Map::get_tick()
     return this->n_tick;
 }
 
-void Map::generate(int difficulty) 
+void Map::generate(int difficulty)
 {
     int local_tick = get_tick();
     int easy_zombie_tick_gen = (rand() % 4 + 1);
     int strong_zombie_tick_gen = (rand() % 10 + 1);
     if (local_tick % easy_zombie_tick_gen == 0)
     {
-        addEntitiy(path[0][0], path[0][1], new Zombie('X', 1, local_tick, 1*difficulty));
+        addEntitiy(path[0][0], path[0][1], new Zombie('X', 1, local_tick, 1 * difficulty));
     }
     else if (local_tick % strong_zombie_tick_gen == 0)
     {
-        addEntitiy(path[0][0], path[0][1], new Zombie('Z', 1, local_tick, 4*difficulty));
+        addEntitiy(path[0][0], path[0][1], new Zombie('Z', 2, local_tick, 4 * difficulty));
     };
+}
+
+bool Map::check_coord_for_tower(int x, int y) {
+    bool mind = false;
+
+    if (getPixel(x, y) == "\x1B[95m#\033[0m") {
+        mind = true;
+    }
+
+    return mind;
 }

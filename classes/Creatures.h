@@ -45,7 +45,7 @@ class Zombie: public EntityBase
 {
     public:
         Zombie(char selfChar, int type, int create_tick, int hp){
-            this->type = 1;
+            this->type = type;
             this->hp = hp;
             this->selfChar = selfChar;
             this->create_tick = create_tick;
